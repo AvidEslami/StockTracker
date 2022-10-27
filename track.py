@@ -9,16 +9,21 @@ headers = {
     'X-RapidAPI-Host': "twelve-data1.p.rapidapi.com"
     }
 
-priceDict = {}
-#while (True):
+#take in previous values to return to working state
+KeyValues = {}
+with open("./StockTrack/values.json") as olData:
+    oldVals = json.load(olData)
+    KeyValues['money'] = int(oldVals["money"])
+
+#get updated values to compare with trends
 conn.request("GET", "/price?symbol=AAPL&format=json", headers=headers)
-#time.sleep(10)
 res = conn.getresponse()
 data = res.read()
 data = json.loads(data)
-priceDict['AAPL'] = data['price']
-print(priceDict)
-price_object = json.dumps(priceDict)
+
+KeyValues['AAPL'] = data['price']
+print(KeyValues)
+money_object = json.dumps(KeyValues)
 with open("./StockTrack/values.json", "w") as outfile:
-    outfile.write(price_object)
+    outfile.write(money_object)
 
